@@ -89,6 +89,7 @@ function commentInPr(branch, branchSha) {
       head: `${owner}:${branch}`,
     })
     .then(({ data }) => {
+      console.log(`@${pr.user.login} merge conflicts found.\nPlease merge master manually into this branch: ${branch}.`)
       const pr = data.find(({ head: { sha } }) => sha == branchSha);
       if (pr) {
         const msg = `@${pr.user.login} merge conflicts found.\nPlease merge master manually into this branch.`;
