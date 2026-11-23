@@ -15,8 +15,20 @@ inputs:
     description: 'Comments in related PR to branch, notifying about the merge conflict'
     required: false
     default: true
+  dryRun:
+    description: 'If true, only list the branches that would be merged. Nothing is changed.'
+    required: false
+    default: false
+  delayMs:
+    description: 'Pause in milliseconds between two merges (also the base wait for retries)'
+    required: false
+    default: '1000'
+  maxRetries:
+    description: 'How many times to retry a merge that failed with a temporary GitHub error (500, 502, 503, 504)'
+    required: false
+    default: '3'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'index.js'
 branding:
   icon: 'git-merge'
