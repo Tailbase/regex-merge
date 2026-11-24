@@ -29,8 +29,12 @@ while IFS=, read -r branch merchant_id active template sha; do
     echo "SKIP     $branch (changed since review: $current)"; skipped=$((skipped+1)); continue
   fi
   if [ "$APPLY" = "--apply" ]; then
-    git push "$REMOTE" --delete "$branch"
-    echo "DELETED  $branch"
+    # --force-with-lease: Git refuses the delete if the branch moved after the check above.
+    if git push "$REMOTE" --force-with-lease="refs/heads/$branch:$sha" --delete "$branch"; then
+      echo "DELETED  $branch"
+    else
+      echo "SKIP     $branch (changed during delete, not deleted)"; skipped=$((skipped+1)); continue
+    fi
   else
     echo "WOULD DELETE  $branch  ($merchant_id, $template)"
   fi
